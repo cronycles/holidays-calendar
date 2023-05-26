@@ -1,25 +1,31 @@
-# Getting Started with Create React App
+# RETAbet holidays calendar
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+To register teams holidays
+
+## Sources
+- https://github.com/3stbn/google-calendar-clone
+- https://stackoverflow.com/questions/53146795/react-usereducer-async-data-fetch
+- https://hackernoon.com/how-to-simulate-a-backend-rest-api-with-json-server-for-crud-development-in-react
 
 ## Available Scripts
 
 In the project directory, you can run:
 
-### `yarn start`
+### `restore`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Is the first command to install all needed librerías that are mandatory to run up the application
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### `npm run run:server`
+This starts the json server db, a quick db that hosts the data. You need to run this command before the `npm run:local`
 
-### `yarn test`
+### `npm run run:local`
+Starts the app in development mode.\
+Opens [http://localhost:3000](http://localhost:3000) on your browser.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### `npm run run:local-ssllegacy`
+like the previous but this works if you have a node version greater than 17
 
-### `yarn build`
+### `npm build`
 
 Builds the app for production to the `build` folder.\
 It correctly bundles React in production mode and optimizes the build for the best performance.
@@ -29,42 +35,37 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `yarn eject`
+### `npm build-ssllegacy`
+like the previous but this works if you have a node version greater than 17
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### `npm run run:production`
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+It starts the application with node, using the library **serve** that, with the previous **restore** command it has been installed globally
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## How it works
+You have a folder `src/configuration` in witch you have to set the main configuration every year. 
+You simply have to copy and paste configuration under a folder named with you current year.
+Than you can change the parameters inside the files and than launch your application.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+NOTE: if you do not have the current year configuration it will get the past year one, 
+otherwise the application throws errors.
+
+## First start
+To run for first time the application, before you need to install all the libraries and then launch server first and then run the application. these are the following npm command you need to run:
+* `npm run restore`
+* `npm run run:server`
+* `npm run run:local`
+
+## Debug (VScode)
+
+To debug it you need to:
+
+- run server
+- run local
+- and then press F5 or the green arrow in VS Code to launch the debugger and open a new browser instance
 
 ## Learn More
 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
