@@ -15,6 +15,9 @@ export default function Day({ day, rowIdx }) {
             if (events && events.length > 0) {
                 setDayEvents(events);
             }
+            else {
+                setDayEvents([]);
+            }
         } else {
             setDayEvents([]);
         }
