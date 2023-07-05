@@ -1,13 +1,31 @@
 import React, { useContext, useState } from "react";
 import GlobalContext from "../context/GlobalContext";
+import { useCookies } from "react-cookie";
 
 export default function EventModal() {
+    const [cookies, setCookie] = useCookies(["hcdu"]);
     const { setShowEventModal, daySelected, dispatchCalEvent, selectedEvent, teamMembers } = useContext(GlobalContext);
     const [isProvisional, setIsProvisional] = useState(selectedEvent ? selectedEvent.isProvisional : false);
-    const [isSpecialWorkingHours, setIsSpecialWorkingHours] = useState(selectedEvent ? selectedEvent.isSpecialWorkingHours : false);
-    const [selectedTeamMember, setSelectedTeamMember] = useState(
-        selectedEvent ? teamMembers.find(tm => tm.id === selectedEvent.teamMemberId) : teamMembers[0]
+    const [isSpecialWorkingHours, setIsSpecialWorkingHours] = useState(
+        selectedEvent ? selectedEvent.isSpecialWorkingHours : false
     );
+    const [selectedTeamMember, setSelectedTeamMember] = useState(() => {
+        if (selectedEvent) {
+            return teamMembers.find(tm => tm.id === selectedEvent.teamMemberId);
+        } else {
+            if (cookies.hcdu && cookies.hcdu > 0) {
+                return teamMembers.find(tm => (tm.id == cookies.hcdu));
+            } else {
+                return teamMembers[0];
+            }
+        }
+    });
+
+    function handleTeamMemberClick(teamMember) {
+        setCookie("hcdu", teamMember.id);
+        setSelectedTeamMember(teamMember);
+        changeCheckboxCheck(teamMember);
+    }
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -29,15 +47,14 @@ export default function EventModal() {
     }
 
     function changeCheckboxCheck(teamMember) {
-        if(teamMember.hasDefaultSpecialWorkingHours) {
+        if (teamMember.hasDefaultSpecialWorkingHours) {
             setIsSpecialWorkingHours(true);
             document.getElementById("isSpecialWorkingHours").checked = true;
-        }
-        else {
+        } else {
             setIsSpecialWorkingHours(false);
             document.getElementById("isSpecialWorkingHours").checked = false;
         }
-    } 
+    }
     return (
         <div className="h-screen w-full fixed left-0 top-0 flex justify-center items-center">
             <form className="bg-white rounded-lg shadow-2xl w-1/8" style={{ minWidth: "33vw" }}>
@@ -71,10 +88,7 @@ export default function EventModal() {
                             {teamMembers.map((teamMember, i) => (
                                 <span
                                     key={i}
-                                    onClick={() => {
-                                        setSelectedTeamMember(teamMember);
-                                        changeCheckboxCheck(teamMember);
-                                    }}
+                                    onClick={() => handleTeamMemberClick(teamMember)}
                                     style={{
                                         padding: "5px 10px",
                                         gap: "5px",
