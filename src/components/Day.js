@@ -12,20 +12,32 @@ export default function Day({ day, rowIdx }) {
     useEffect(() => {
         if (savedEvents && savedEvents.length > 0) {
             const events = savedEvents.filter(evt => dayjs(evt.day).format("DD-MM-YY") === day.format("DD-MM-YY"));
-            if (events && events.length > 0) {
-                setDayEvents(events);
-            }
-            else {
+            let eventsOfCheckedTeamMember = getOnlyEventsWithCheckedTeamMember(events);
+            if (eventsOfCheckedTeamMember && eventsOfCheckedTeamMember.length > 0) {
+                setDayEvents(eventsOfCheckedTeamMember);
+            } else {
                 setDayEvents([]);
             }
         } else {
             setDayEvents([]);
         }
-    }, [savedEvents, day]);
+    }, [savedEvents, day, teamMembers]);
+
+    function getOnlyEventsWithCheckedTeamMember(events) {
+        let outcome = [];
+        for (const theEvent of events) {
+            const teamMemberId = theEvent.teamMemberId;
+            const teamMember = teamMembers.find(tm => tm.id == teamMemberId);
+            if(teamMember?.checked) {
+                outcome.push(theEvent);
+            }
+        }
+        return outcome;
+    }
 
     function handelDayClick() {
         setDaySelected(day);
-        if(canShowEventModal()) {
+        if (canShowEventModal()) {
             setShowEventModal(true);
         }
     }
