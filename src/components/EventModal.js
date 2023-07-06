@@ -31,7 +31,7 @@ export default function EventModal() {
                     executeSubmit();
                     setShowEventModal(false);
                     break;
-                case "Backspace":
+                case "Delete":
                     if (selectedEvent) {
                         dispatchCalEvent({
                             type: "delete",
