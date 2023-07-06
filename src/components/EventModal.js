@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import GlobalContext from "../context/GlobalContext";
 import { useCookies } from "react-cookie";
 
@@ -14,12 +14,44 @@ export default function EventModal() {
             return teamMembers.find(tm => tm.id === selectedEvent.teamMemberId);
         } else {
             if (cookies.hcdu && cookies.hcdu > 0) {
-                return teamMembers.find(tm => (tm.id == cookies.hcdu));
+                return teamMembers.find(tm => tm.id == cookies.hcdu);
             } else {
                 return teamMembers[0];
             }
         }
     });
+
+    useEffect(() => {
+        const handleKeydown = e => {
+            switch (e.key) {
+                case "Escape":
+                    setShowEventModal(false);
+                    break;
+                case "Enter":
+                    executeSubmit();
+                    setShowEventModal(false);
+                    break;
+                case "Backspace":
+                    if (selectedEvent) {
+                        dispatchCalEvent({
+                            type: "delete",
+                            payload: selectedEvent,
+                        });
+                        setShowEventModal(false);
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+        };
+        window.addEventListener("keydown", handleKeydown);
+        return () => window.removeEventListener("keydown", handleKeydown);
+    }, []);
+
+    function handleCloseClick() {
+        setShowEventModal(false);
+    }
 
     function handleTeamMemberClick(teamMember) {
         setCookie("hcdu", teamMember.id);
@@ -27,8 +59,21 @@ export default function EventModal() {
         changeCheckboxCheck(teamMember);
     }
 
-    function handleSubmit(e) {
+    function handleSubmitClick(e) {
         e.preventDefault();
+        executeSubmit();
+        setShowEventModal(false);
+    }
+
+    function handleDeleteClick() {
+        dispatchCalEvent({
+            type: "delete",
+            payload: selectedEvent,
+        });
+        setShowEventModal(false);
+    }
+
+    function executeSubmit() {
         const calendarEvent = {
             isProvisional,
             isSpecialWorkingHours,
@@ -42,8 +87,6 @@ export default function EventModal() {
         } else {
             dispatchCalEvent({ type: "push", payload: calendarEvent });
         }
-
-        setShowEventModal(false);
     }
 
     function changeCheckboxCheck(teamMember) {
@@ -63,19 +106,13 @@ export default function EventModal() {
                     <div>
                         {selectedEvent && (
                             <span
-                                onClick={() => {
-                                    dispatchCalEvent({
-                                        type: "delete",
-                                        payload: selectedEvent,
-                                    });
-                                    setShowEventModal(false);
-                                }}
+                                onClick={handleDeleteClick}
                                 className="material-icons-outlined text-gray-400 cursor-pointer"
                             >
                                 delete
                             </span>
                         )}
-                        <button onClick={() => setShowEventModal(false)}>
+                        <button onClick={handleCloseClick}>
                             <span className="material-icons-outlined text-gray-400">close</span>
                         </button>
                     </div>
@@ -135,7 +172,7 @@ export default function EventModal() {
                 <footer className="flex justify-end border-t p-3 mt-5">
                     <button
                         type="submit"
-                        onClick={handleSubmit}
+                        onClick={handleSubmitClick}
                         className="bg-blue-500 hover:bg-blue-600 px-6 py-2 rounded text-white"
                     >
                         Save
